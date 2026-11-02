@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "menu_categories")
@@ -19,4 +21,7 @@ public class MenuCategory {
     private String name;
 
     private String description;
+
+    @OneToMany(mappedBy = "category")
+    private List<MenuItem> items = new ArrayList<>();
 }
