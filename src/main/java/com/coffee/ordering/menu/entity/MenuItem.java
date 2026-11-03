@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "menu_items")
@@ -29,4 +31,7 @@ public class MenuItem {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private MenuCategory category;
+
+    @OneToMany(mappedBy = "menuItem")
+    private List<ItemOption> options = new ArrayList<>();
 }
