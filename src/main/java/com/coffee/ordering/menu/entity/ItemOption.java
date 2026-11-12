@@ -26,7 +26,7 @@ public class ItemOption {
 
     private BigDecimal priceDelta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_item_id", nullable = false)
     private MenuItem menuItem;
 

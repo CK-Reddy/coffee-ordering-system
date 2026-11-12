@@ -28,7 +28,7 @@ public class MenuItem {
 
     private boolean available = true;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private MenuCategory category;
 
