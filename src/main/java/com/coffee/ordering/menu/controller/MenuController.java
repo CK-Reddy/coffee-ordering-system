@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import com.coffee.ordering.menu.dto.CategoryResponse;
 import com.coffee.ordering.menu.dto.CreateCategoryRequest;
+import com.coffee.ordering.menu.dto.MenuItemResponse;
+import com.coffee.ordering.menu.dto.CreateItemRequest;
 
 @RestController
 @RequestMapping("/admin/menu")
@@ -25,6 +27,12 @@ public class MenuController {
         @Valid @RequestBody CreateCategoryRequest request) {
        CategoryResponse response = menuService.createCategory(request);
        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/items")
+    public ResponseEntity<MenuItemResponse> createItem(
+            @Valid @RequestBody CreateItemRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(menuService.createItem(request));
     }
 
 }
