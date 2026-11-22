@@ -11,6 +11,8 @@ import com.coffee.ordering.menu.dto.CategoryResponse;
 import com.coffee.ordering.menu.dto.CreateCategoryRequest;
 import com.coffee.ordering.menu.dto.MenuItemResponse;
 import com.coffee.ordering.menu.dto.CreateItemRequest;
+import com.coffee.ordering.menu.dto.CreateOptionRequest;
+import com.coffee.ordering.menu.dto.ItemOptionResponse;
 
 @RestController
 @RequestMapping("/admin/menu")
@@ -33,6 +35,12 @@ public class MenuController {
     public ResponseEntity<MenuItemResponse> createItem(
             @Valid @RequestBody CreateItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuService.createItem(request));
+    }
+
+    @PostMapping("/options")
+    public ResponseEntity<ItemOptionResponse> createOption(
+            @Valid @RequestBody CreateOptionRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(menuService.createOption(request));
     }
 
 }
