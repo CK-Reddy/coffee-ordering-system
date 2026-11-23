@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import com.coffee.ordering.menu.dto.MenuItemResponse;
 import com.coffee.ordering.menu.dto.CreateItemRequest;
 import com.coffee.ordering.menu.dto.CreateOptionRequest;
 import com.coffee.ordering.menu.dto.ItemOptionResponse;
+import com.coffee.ordering.menu.dto.UpdateAvailabilityRequest;
 
 @RestController
 @RequestMapping("/admin/menu")
@@ -35,6 +38,13 @@ public class MenuController {
     public ResponseEntity<MenuItemResponse> createItem(
             @Valid @RequestBody CreateItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuService.createItem(request));
+    }
+
+    @PatchMapping("/items/{id}/availability")
+    public ResponseEntity<MenuItemResponse> updateAvailability(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateAvailabilityRequest request){
+        return ResponseEntity.ok(menuService.updateAvailability(request, id));
     }
 
     @PostMapping("/options")

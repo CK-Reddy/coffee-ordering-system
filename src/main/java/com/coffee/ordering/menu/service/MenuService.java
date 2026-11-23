@@ -5,6 +5,7 @@ import com.coffee.ordering.menu.dto.CreateItemRequest;
 import com.coffee.ordering.menu.dto.MenuItemResponse;
 import com.coffee.ordering.menu.dto.ItemOptionResponse;
 import com.coffee.ordering.menu.dto.CreateOptionRequest;
+import com.coffee.ordering.menu.dto.UpdateAvailabilityRequest;
 import com.coffee.ordering.menu.entity.ItemOption;
 import com.coffee.ordering.menu.mapper.MenuMapper;
 import com.coffee.ordering.menu.entity.MenuCategory;
@@ -54,6 +55,14 @@ public class MenuService {
         ItemOption itemOption = mapper.toEntity(request);
         itemOption.setMenuItem(menuItem);
         ItemOption saved = itemOptionRepository.save(itemOption);
+        return mapper.toResponse(saved);
+    }
+
+    @Transactional
+    public MenuItemResponse updateAvailability(UpdateAvailabilityRequest request, Long id){
+    MenuItem menuItem = itemRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu Item not found: " + id));
+        menuItem.setAvailable(request.available());
+        MenuItem saved = itemRepository.save(menuItem);
         return mapper.toResponse(saved);
     }
 
