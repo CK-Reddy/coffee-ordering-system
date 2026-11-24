@@ -6,6 +6,7 @@ import com.coffee.ordering.menu.dto.MenuItemResponse;
 import com.coffee.ordering.menu.dto.ItemOptionResponse;
 import com.coffee.ordering.menu.dto.CreateOptionRequest;
 import com.coffee.ordering.menu.dto.UpdateAvailabilityRequest;
+import com.coffee.ordering.menu.dto.CategoryMenuResponse;
 import com.coffee.ordering.menu.entity.ItemOption;
 import com.coffee.ordering.menu.mapper.MenuMapper;
 import com.coffee.ordering.menu.entity.MenuCategory;
@@ -17,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MenuService {
@@ -64,6 +69,33 @@ public class MenuService {
         menuItem.setAvailable(request.available());
         MenuItem saved = itemRepository.save(menuItem);
         return mapper.toResponse(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryMenuResponse> getMenu(){
+        List<MenuItem> items  = itemRepository.findByAvailableTrueOrderByCategoryIdAscIdAsc();
+
+        Map<MenuCategory, List<MenuItemResponse>> grouped = new LinkedHashMap<>();
+        for(MenuItem item : items) {
+            MenuItemResponse dto = mapper.toResponse(item);
+            grouped.computeIfAbsent(item.getCategory(), c -> new ArrayList<>()).add(dto);
+        }
+
+        List<CategoryMenuResponse> result = new ArrayList<>();
+        for(Map.Entry<MenuCategory, List<MenuItemResponse>> entry: grouped.entrySet()){
+            result.add(new CategoryMenuResponse(
+                    entry.getKey().getId(),
+                    entry.getKey().getName(),
+                    entry.getValue()
+            ));
+        }
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public MenuItemResponse getItem(Long id){
+        MenuItem item = itemRepository.findById(id).filter(MenuItem::isAvailable).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu item not found: " + id));
+        return mapper.toResponse(item);
     }
 
 }
